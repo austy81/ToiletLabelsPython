@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="text-3xl font-extrabold mb-8 text-gray-800">Toilet Sign Pairs</h1>
+{% if pairs %}
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for pair in pairs %}
+    <div class="bg-white border border-gray-200 shadow rounded-lg p-6 hover:shadow-lg transition flex flex-col justify-between">
+        <div class="flex items-center mb-4">
+            {% if pair.MenImageUrl %}
+                <img src="{{ AZURE_BLOB_BASE_URL }}toiletlabels/{{ pair.MenImageUrl }}" alt="Men's sign" class="w-12 h-12 object-cover rounded-full border-2 border-blue-400 mr-4">
+            {% else %}
+                <span class="w-12 h-12 flex items-center justify-center bg-gray-200 rounded-full border-2 border-gray-300 mr-4">
+                    <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"/></svg>
+                </span>
+            {% endif %}
+            <div>
+                <a href="{% url 'gallery:signpair_detail' pair.RowKey %}" class="text-xl text-blue-700 hover:underline font-semibold block">
+                    {{ pair.Place }}
+                </a>
+                <div class="text-gray-500 text-sm">Avg Vote: {{ pair.AvgVote|default:0|floatformat:1 }}</div>
+            </div>
+        </div>
+        <a href="{% url 'gallery:signpair_detail' pair.RowKey %}" class="mt-2 inline-block text-sm text-blue-500 hover:underline">View Details</a>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="bg-white rounded shadow p-8 text-center text-gray-500 text-lg">
+    No sign pairs available.
+</div>
+{% endif %}
+{% if is_paginated %}
+  <div>
+    {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+    {% endif %}
+    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}">Next</a>
+    {% endif %}
+  </div>
+{% endif %}
+{% endblock %}

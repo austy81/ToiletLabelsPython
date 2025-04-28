@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Toilet Labels Gallery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <nav class="flex items-center justify-between bg-white shadow rounded-lg px-4 py-2 mb-8">
+            <div class="flex items-center space-x-6">
+                <a href="/" class="text-blue-700 hover:underline font-semibold">Home</a>
+                <a href="/admin/" class="text-blue-700 hover:underline font-semibold">Admin</a>
+            </div>
+            <div class="flex items-center space-x-4">
+                {% if user.is_authenticated and user.is_superuser %}
+                    <a href="/upload/" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition font-bold">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16m8-8H4"/></svg>
+                        Upload Label
+                    </a>
+                {% endif %}
+                <span class="inline-flex items-center justify-center w-10 h-10 bg-gray-200 rounded-full">
+                    <svg class="w-6 h-6 text-gray-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"/></svg>
+                </span>
+            </div>
+        </nav>
+        {% block content %}{% endblock %}
+    </div>
+    {% if user.is_authenticated and user.is_superuser %}
+    <a href="/upload/" class="fixed bottom-8 right-8 z-50 bg-blue-600 text-white rounded-full shadow-lg p-4 flex items-center hover:bg-blue-700 transition group">
+        <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16m8-8H4"/></svg>
+        <span class="font-bold hidden md:inline-block">Upload Label</span>
+    </a>
+    {% endif %}
+</body>
+</html>
