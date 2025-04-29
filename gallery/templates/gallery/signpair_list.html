@@ -1,26 +1,50 @@
 {% extends "base.html" %}
 {% block content %}
-<h1 class="text-3xl font-extrabold mb-8 text-gray-800">Toilet Sign Pairs</h1>
+<div class="sticky top-0 z-10 bg-gray-50 py-4 mb-4 shadow-sm">
+  <h1 class="text-3xl font-extrabold text-gray-800 text-center tracking-tight">Toilet Sign Pairs</h1>
+</div>
 {% if pairs %}
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<div class="flex flex-col gap-8 md:gap-10 px-2 md:px-8 lg:px-32">
     {% for pair in pairs %}
-    <div class="bg-white border border-gray-200 shadow rounded-lg p-6 hover:shadow-lg transition flex flex-col justify-between">
-        <div class="flex items-center mb-4">
+     <div class="bg-white rounded-3xl shadow-xl p-6 md:p-10 flex flex-col md:flex-row border border-gray-100 w-full">
+        <!-- Images column -->
+        <div class="flex flex-col md:flex-row md:flex-[2] min-w-0 w-full items-center md:items-start md:justify-center gap-4">
+          <div class="flex flex-col items-center">
             {% if pair.MenImageUrl %}
-                <img src="{{ AZURE_BLOB_BASE_URL }}toiletlabels/{{ pair.MenImageUrl }}" alt="Men's sign" class="w-12 h-12 object-cover rounded-full border-2 border-blue-400 mr-4">
+              <img src="{{ AZURE_BLOB_BASE_URL }}{{ pair.MenImageUrl }}" alt="Men's sign" class="w-32 h-32 md:w-48 md:h-48 aspect-square object-contain rounded-2xl border-4 border-blue-400 shadow-lg">
             {% else %}
-                <span class="w-12 h-12 flex items-center justify-center bg-gray-200 rounded-full border-2 border-gray-300 mr-4">
-                    <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"/></svg>
-                </span>
+              <span class="w-20 h-20 flex items-center justify-center bg-gray-200 rounded-full border-4 border-gray-300 shadow mb-1">
+                <svg class="w-10 h-10 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"/></svg>
+              </span>
             {% endif %}
-            <div>
-                <a href="{% url 'gallery:signpair_detail' pair.RowKey %}" class="text-xl text-blue-700 hover:underline font-semibold block">
-                    {{ pair.Place }}
-                </a>
-                <div class="text-gray-500 text-sm">Avg Vote: {{ pair.AvgVote|default:0|floatformat:1 }}</div>
-            </div>
+            <p class="text-center mt-1 text-gray-600 font-semibold text-xs">Men's Sign</p>
+          </div>
+          <div class="flex flex-col items-center">
+            {% if pair.WomenImageUrl %}
+              <img src="{{ AZURE_BLOB_BASE_URL }}{{ pair.WomenImageUrl }}" alt="Women's sign" class="w-32 h-32 md:w-48 md:h-48 aspect-square object-contain rounded-2xl border-4 border-pink-400 shadow-lg">
+            {% else %}
+              <span class="w-20 h-20 flex items-center justify-center bg-gray-200 rounded-full border-4 border-gray-300 shadow mb-1">
+                <svg class="w-10 h-10 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"/></svg>
+              </span>
+            {% endif %}
+            <p class="text-center mt-1 text-gray-600 font-semibold text-xs">Women's Sign</p>
+          </div>
         </div>
-        <a href="{% url 'gallery:signpair_detail' pair.RowKey %}" class="mt-2 inline-block text-sm text-blue-500 hover:underline">View Details</a>
+        <!-- Info column -->
+        <div class="flex flex-col justify-center md:flex-[3] min-w-0 w-full items-center md:items-start mt-6 md:mt-0">
+          <h2 class="text-lg font-bold text-gray-800">{{ pair.Place }}</h2>
+        <p class="mb-1 text-gray-700 text-sm">{{ pair.Description }}</p>
+        <div class="flex items-center text-gray-500 text-xs mb-1">
+          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 12.414a4 4 0 1 0-1.414 1.414l4.243 4.243a1 1 0 0 0 1.414-1.414z"/></svg>
+          Coordinates: {{ pair.Latitude }}, {{ pair.Longitude }}
+        </div>
+        <div class="flex items-center space-x-1 mb-1">
+          <span class="text-blue-800 font-semibold text-xs">Average Vote:</span>
+          <span class="text-sm">{{ pair.AvgVote|default:0|floatformat:1 }} / 5</span>
+          <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 0 0 .95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 0 0-.364 1.118l1.286 3.966c.3.922-.755 1.688-1.54 1.118l-3.38-2.455a1 1 0 0 0-1.176 0l-3.38 2.455c-.784.57-1.838-.196-1.54-1.118l1.286-3.966a1 1 0 0 0-.364-1.118L2.05 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 0 0 .95-.69l1.286-3.967z"/></svg>
+        </div>
+      </div>
+      <a href="{% url 'gallery:signpair_detail' pair.RowKey %}" class="mt-4 inline-block text-sm font-semibold text-blue-600 hover:underline transition-colors">View Details →</a>
     </div>
     {% endfor %}
 </div>
@@ -39,5 +63,6 @@
       <a href="?page={{ page_obj.next_page_number }}">Next</a>
     {% endif %}
   </div>
+  
 {% endif %}
 {% endblock %}

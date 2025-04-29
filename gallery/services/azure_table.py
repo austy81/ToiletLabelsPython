@@ -1,7 +1,7 @@
 import os
 from azure.data.tables import TableServiceClient
 
-class AzureToiletLabelService:
+class AzureTableManager:
     def __init__(self):
         self.connection_string = os.environ.get("AZURE_STORAGE_CONNECTION_STRING")
         self.table_name = "ToiletLabels"
@@ -12,7 +12,10 @@ class AzureToiletLabelService:
         except Exception as e:
             print(f"[AzureToiletLabelService] Table creation failed or already exists: {e}")
 
-    def upsert_label(self, label_id, place, description, men_image_url, women_image_url, num_voters, avg_vote):
+    def upsert_label(self, label_id, place, description, men_image_url, women_image_url, num_voters, avg_vote, country=None, city=None, restaurant=None, created=None):
+        import datetime
+        if created is None:
+            created = datetime.datetime.utcnow().isoformat()
         entity = {
             'PartitionKey': 'label',
             'RowKey': str(label_id),
@@ -22,6 +25,10 @@ class AzureToiletLabelService:
             'WomenImageUrl': women_image_url,
             'NumVoters': num_voters,
             'AvgVote': avg_vote,
+            'Country': country if country is not None else '',
+            'City': city if city is not None else '',
+            'Restaurant': restaurant if restaurant is not None else '',
+            'Created': created,
         }
         self.table_client.upsert_entity(entity=entity)
 
@@ -33,4 +40,7 @@ class AzureToiletLabelService:
             return None
 
     def list_labels(self):
-        return list(self.table_client.query_entities("PartitionKey eq 'label'"))
+        # Fetch all, then sort by Created descending (newest first)
+        labels = list(self.table_client.query_entities("PartitionKey eq 'label'"))
+        return sorted(labels, key=lambda x: x.get('Created', ''), reverse=True)
+
