@@ -1,7 +1,23 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="sticky top-0 z-10 bg-gray-50 py-4 mb-4 shadow-sm">
-  <h1 class="text-3xl font-extrabold text-gray-800 text-center tracking-tight">Toilet Sign Pairs</h1>
+<div class="sticky top-0 z-10 bg-gray-50 py-4 mb-4 shadow-sm flex items-center justify-center relative">
+  <h1 class="text-3xl font-extrabold text-gray-800 text-center tracking-tight w-full">Toilet Sign Pairs</h1>
+  {% if user.is_authenticated %}
+    <div class="absolute right-8 top-1/2 -translate-y-1/2 flex flex-row-reverse items-center gap-3">
+      <span class="inline-flex items-center justify-center w-10 h-10 bg-gray-200 rounded-full">
+        <svg class="w-6 h-6 text-gray-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"/></svg>
+      </span>
+      {% if user.is_superuser %}
+        <form method="post" action="/logout/" style="display:inline;">{% csrf_token %}
+          <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-full shadow-lg hover:bg-red-700 transition font-bold">Logout</button>
+        </form>
+      {% endif %}
+    </div>
+  {% else %}
+    <div class="absolute right-8 top-1/2 -translate-y-1/2 flex items-center gap-3">
+      <a href="/login/" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition font-bold">Login</a>
+    </div>
+  {% endif %}
 </div>
 {% if pairs %}
 <div class="flex flex-col gap-8 md:gap-10 px-2 md:px-8 lg:px-32">
@@ -44,7 +60,7 @@
           <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 0 0 .95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 0 0-.364 1.118l1.286 3.966c.3.922-.755 1.688-1.54 1.118l-3.38-2.455a1 1 0 0 0-1.176 0l-3.38 2.455c-.784.57-1.838-.196-1.54-1.118l1.286-3.966a1 1 0 0 0-.364-1.118L2.05 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 0 0 .95-.69l1.286-3.967z"/></svg>
         </div>
       </div>
-      <a href="{% url 'gallery:signpair_detail' pair.RowKey %}" class="mt-4 inline-block text-sm font-semibold text-blue-600 hover:underline transition-colors">View Details →</a>
+      
     </div>
     {% endfor %}
 </div>

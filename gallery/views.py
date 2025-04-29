@@ -46,15 +46,7 @@ def signpair_list(request):
         'AZURE_BLOB_BASE_URL': AzureBlobManager.get_blob_base_url(),
     })
 
-def signpair_detail(request, pk):
-    table_manager = AzureTableManager()
-    pair = table_manager.get_label(pk)
-    if not pair:
-        return render(request, '404.html', status=404)
-    return render(request, 'gallery/signpair_detail.html', {
-        'pair': pair,
-        'AZURE_BLOB_BASE_URL': AzureBlobManager.get_blob_base_url(),
-    })
+
 
 def vote_view(request, pk):
     table_manager = AzureTableManager()
