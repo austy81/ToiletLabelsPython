@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-trh2@l)5z5+z)^dhp)meaa*ceo8sf7(0ud$0@tvfdy)cgfm#zn
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['toiletlabels.azurewebsites.net']
 
 
 # Application definition
